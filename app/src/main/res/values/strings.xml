@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Portale Simulatore Gare</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_subscription">Iscrizioni</string>
+    <string name="tab_current">In corso</string>
 </resources>

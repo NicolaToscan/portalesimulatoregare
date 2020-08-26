@@ -9,11 +9,9 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
-import it.unitn.lpsmt2020.portalesimulatoregare.ui.main.SectionsPagerAdapter;
+import it.unitn.lpsmt2020.portalesimulatoregare.ui.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
