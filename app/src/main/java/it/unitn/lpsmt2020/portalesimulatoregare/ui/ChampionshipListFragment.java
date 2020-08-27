@@ -3,7 +3,10 @@ package it.unitn.lpsmt2020.portalesimulatoregare.ui;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,13 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unitn.lpsmt2020.portalesimulatoregare.R;
+import it.unitn.lpsmt2020.portalesimulatoregare.datasource.DataSource;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
 import it.unitn.lpsmt2020.portalesimulatoregare.ui.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
  */
 public class ChampionshipListFragment extends Fragment {
+
+    private final MutableLiveData<List<ChampionshipItem>> championshipList = new MutableLiveData<List<ChampionshipItem>>();
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -52,20 +62,26 @@ public class ChampionshipListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_championship_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ChampionshipListRecyclerViewAdapter(DummyContent.ITEMS));
+
+            championshipList.observe(getViewLifecycleOwner(), new Observer<List<ChampionshipItem>>() {
+                @Override
+                public void onChanged(@Nullable List<ChampionshipItem> chamList) {
+                    recyclerView.setAdapter(new ChampionshipListRecyclerViewAdapter(chamList));
+                }
+            });
+            DataSource.getSubscribedChampionship(championshipList);
         }
         return view;
     }

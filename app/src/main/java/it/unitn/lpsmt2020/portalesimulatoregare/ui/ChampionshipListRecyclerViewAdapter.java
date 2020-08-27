@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import it.unitn.lpsmt2020.portalesimulatoregare.R;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
 import it.unitn.lpsmt2020.portalesimulatoregare.ui.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -19,9 +20,9 @@ import java.util.List;
  */
 public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<ChampionshipListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<ChampionshipItem> mValues;
 
-    public ChampionshipListRecyclerViewAdapter(List<DummyItem> items) {
+    public ChampionshipListRecyclerViewAdapter(List<ChampionshipItem> items) {
         mValues = items;
     }
 
@@ -33,8 +34,8 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        //holder.btnChampionshipSelect.setText("Championship " + 1);
+        holder.item = mValues.get(position);
+        holder.txtChampionshipTitle.setText(holder.item.getName());
     }
 
     @Override
@@ -44,19 +45,18 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final Button btnChampionshipSelect = null;
-        public DummyItem mItem;
+        public final TextView txtChampionshipTitle;
+        public ChampionshipItem item;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            //btnChampionshipSelect = (Button) view.findViewById(R.id.btnChampionshipSelect);
+            txtChampionshipTitle = (TextView) view.findViewById(R.id.txtChampionshipTitle);
         }
 
         @Override
         public String toString() {
-            // return super.toString() + " '" + btnChampionshipSelect.getText() + "'";
-            return "ciao";
+            return super.toString() + " '" + txtChampionshipTitle.getText() + "'";
         }
     }
 }
