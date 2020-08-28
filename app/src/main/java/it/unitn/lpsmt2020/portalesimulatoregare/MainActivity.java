@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.DataSource;
+import it.unitn.lpsmt2020.portalesimulatoregare.datasource.InternalDB;
 import it.unitn.lpsmt2020.portalesimulatoregare.ui.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +20,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         DataSource.initDataSource(this.getApplicationContext());
+        InternalDB.initDB(this.getApplicationContext());
+
+
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -35,5 +40,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
     }
 }

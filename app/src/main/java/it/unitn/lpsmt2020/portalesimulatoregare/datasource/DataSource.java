@@ -48,7 +48,9 @@ public class DataSource {
 
                             for (int i = 0; i < champArray.length(); i++) {
                                 JSONObject champJSON = champArray.getJSONObject(i);
-                                res.add(new ChampionshipItem(Integer.parseInt(champJSON.getString("id")), champJSON.getString("nome")));
+                                int id = Integer.parseInt(champJSON.getString("id"));
+                                String name = champJSON.getString("nome");
+                                res.add(new ChampionshipItem(id, name, InternalDB.isSubscribed(id)));
                             }
                             championshipList.postValue(res);
 

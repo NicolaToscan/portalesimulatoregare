@@ -2,6 +2,7 @@ package it.unitn.lpsmt2020.portalesimulatoregare.ui;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -27,7 +28,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return ChampionshipListFragment.newInstance(1);
+        return ChampionshipListFragment.newInstance(position == 0);
     }
 
     @Nullable

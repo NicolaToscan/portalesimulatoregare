@@ -14,12 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import it.unitn.lpsmt2020.portalesimulatoregare.R;
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.DataSource;
+import it.unitn.lpsmt2020.portalesimulatoregare.datasource.InternalDB;
+import it.unitn.lpsmt2020.portalesimulatoregare.event.SubscriptionChangedEvent;
 import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
 import it.unitn.lpsmt2020.portalesimulatoregare.ui.dummy.DummyContent;
 
@@ -31,9 +39,12 @@ public class ChampionshipListFragment extends Fragment {
     private final MutableLiveData<List<ChampionshipItem>> championshipList = new MutableLiveData<List<ChampionshipItem>>();
 
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_ONLY_SUBBED = "only-subbed";
     // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private boolean onlySubbed = false;
+    private RecyclerView recyclerView;
+    private EventBus bus = EventBus.getDefault();
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,11 +54,10 @@ public class ChampionshipListFragment extends Fragment {
     }
 
     // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static ChampionshipListFragment newInstance(int columnCount) {
+    public static ChampionshipListFragment newInstance(boolean onlySubbed) {
         ChampionshipListFragment fragment = new ChampionshipListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putBoolean(ARG_ONLY_SUBBED, onlySubbed);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,34 +65,56 @@ public class ChampionshipListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            this.onlySubbed = getArguments().getBoolean(ARG_ONLY_SUBBED);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_championship_list, container, false);
+        Context context = view.getContext();
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            final RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);;
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        championshipList.observe(getViewLifecycleOwner(), new Observer<List<ChampionshipItem>>() {
+            @Override
+            public void onChanged(@Nullable List<ChampionshipItem> chamList) {
+
+                if (onlySubbed)
+                    chamList = chamList.stream().filter(c -> c.isSubscribed()).collect(Collectors.toList());
+
+                recyclerView.setAdapter(new ChampionshipListRecyclerViewAdapter(chamList, onlySubbed));
+                ((ProgressBar) view.findViewById(R.id.listLoading)).setVisibility(View.GONE);
             }
+        });
+        DataSource.getSubscribedChampionship(championshipList);
 
-            championshipList.observe(getViewLifecycleOwner(), new Observer<List<ChampionshipItem>>() {
-                @Override
-                public void onChanged(@Nullable List<ChampionshipItem> chamList) {
-                    recyclerView.setAdapter(new ChampionshipListRecyclerViewAdapter(chamList));
-                }
-            });
-            DataSource.getSubscribedChampionship(championshipList);
-        }
         return view;
+    }
+
+    @Subscribe
+    public void onUpdateSubbed(SubscriptionChangedEvent event) {
+        int id = event.item.getId();
+
+        int foundAt = -1;
+        for (int i = 0; foundAt == -1 && i < recyclerView.getChildCount(); i++) {
+            ChampionshipListRecyclerViewAdapter.ViewHolder vh = (ChampionshipListRecyclerViewAdapter.ViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(i));
+            if (vh.item.getId() == id)
+                foundAt = i;
+        }
+
+        if (foundAt >= 0) {
+            if (!onlySubbed)
+                ((ChampionshipListRecyclerViewAdapter.ViewHolder) recyclerView.getChildViewHolder(recyclerView.getChildAt(foundAt))).checkSubStatus();
+            else
+                ((ChampionshipListRecyclerViewAdapter) recyclerView.getAdapter()).removeAtIndex(foundAt);
+        } else if (onlySubbed) {
+            ((ChampionshipListRecyclerViewAdapter) recyclerView.getAdapter()).addItem(event.item);
+        }
+
     }
 }
