@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Portale Simulatore Gare</string>
+    <string name="settings_title">Impostazioni Utente</string>
     <string name="tab_subscription">Iscrizioni</string>
     <string name="tab_current">In corso</string>
+    <string name="title_activity_profile_settings">ProfileSettingsActivity</string>
+
 </resources>

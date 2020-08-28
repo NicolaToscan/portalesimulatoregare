@@ -96,6 +96,7 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
         public void onSubClick() {
             boolean nextStatus = !this.item.isSubscribed();
 
+
             if (nextStatus)
                 InternalDB.subscribe(this.item.getId());
             else
