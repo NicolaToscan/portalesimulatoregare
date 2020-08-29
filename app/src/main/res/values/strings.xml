@@ -9,5 +9,6 @@
     <string name="tab_subscribed">Iscritti</string>
     <string name="tab_best_pilots">Migliori piloti</string>
     <string name="tab_best_teams">Migliori Team</string>
+    <string name="tab_game_settings">Impostazioni Gioco</string>
 
 </resources>

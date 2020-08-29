@@ -1,13 +1,15 @@
 package it.unitn.lpsmt2020.portalesimulatoregare.models;
 
 public class ChampionshipItemLight {
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
+    private final String imgUrl;
     private boolean isSubscribed;
 
-    public ChampionshipItemLight(int id, String name, boolean isSubscribed) {
+    public ChampionshipItemLight(int id, String name, String imageUrl, boolean isSubscribed) {
         this.id = id;
         this.name = name;
+        this.imgUrl = imageUrl;
         this.isSubscribed = isSubscribed;
     }
 

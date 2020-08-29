@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
 import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItemLight;
 
 public class DataSource {
@@ -48,7 +49,8 @@ public class DataSource {
                                 JSONObject champJSON = champArray.getJSONObject(i);
                                 int id = Integer.parseInt(champJSON.getString("id"));
                                 String name = champJSON.getString("nome");
-                                res.add(new ChampionshipItemLight(id, name, InternalDB.isSubscribed(id)));
+                                String url = champJSON.getString("logo");
+                                res.add(new ChampionshipItemLight(id, name, url, InternalDB.isSubscribed(id)));
                             }
                             championshipList.postValue(res);
 
@@ -68,5 +70,48 @@ public class DataSource {
 
         addToRequestQueue(jsonObjectRequest);
 
+    }
+
+    public static void getChampionshipDetail(int id, final MutableLiveData<ChampionshipItem> champ) {
+        String url = apiEndpoint + "championship/current.json";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray champArray = response.getJSONArray("campionati");
+                    JSONObject found = null;
+                    for (int i = 0; i < champArray.length() && found == null; i++) {
+                        JSONObject champJSON = champArray.getJSONObject(i);
+                        if (Integer.parseInt(champJSON.getString("id")) == id)
+                            found = champJSON;
+                    }
+
+                    ArrayList<ChampionshipItemLight> res = new ArrayList<ChampionshipItemLight>();
+
+                    for (int i = 0; i < champArray.length(); i++) {
+                        JSONObject champJSON = champArray.getJSONObject(i);
+                        int id = Integer.parseInt(champJSON.getString("id"));
+                        String name = champJSON.getString("nome");
+                        String url = champJSON.getString("logo");
+                        res.add(new ChampionshipItemLight(id, name, url, InternalDB.isSubscribed(id)));
+                    }
+                    // championshipList.postValue(res);
+
+                } catch (Exception e) {
+                    // championshipList.postValue(new ArrayList<ChampionshipItemLight>());
+                    //TODO: qualcosina qui
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // championshipList.postValue(new ArrayList<ChampionshipItemLight>());
+                //TODO: qualcosina qui
+            }
+        });
+
+        addToRequestQueue(jsonObjectRequest);
     }
 }
