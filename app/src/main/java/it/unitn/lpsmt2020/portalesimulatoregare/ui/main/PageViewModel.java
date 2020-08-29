@@ -1,4 +1,4 @@
-package it.unitn.lpsmt2020.portalesimulatoregare.ui;
+package it.unitn.lpsmt2020.portalesimulatoregare.ui.main;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

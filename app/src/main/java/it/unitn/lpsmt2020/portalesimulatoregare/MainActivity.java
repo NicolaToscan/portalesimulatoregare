@@ -18,7 +18,7 @@ import android.view.View;
 
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.DataSource;
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.InternalDB;
-import it.unitn.lpsmt2020.portalesimulatoregare.ui.SectionsPagerAdapter;
+import it.unitn.lpsmt2020.portalesimulatoregare.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 

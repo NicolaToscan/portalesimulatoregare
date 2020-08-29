@@ -4,5 +4,10 @@
     <string name="tab_subscription">Iscrizioni</string>
     <string name="tab_current">In corso</string>
     <string name="title_activity_profile_settings">ProfileSettingsActivity</string>
+    <string name="title_activity_championship_detail">ChampionshipDetailActivity</string>
+    <string name="tab_events">Events</string>
+    <string name="tab_subscribed">Iscritti</string>
+    <string name="tab_best_pilots">Migliori piloti</string>
+    <string name="tab_best_teams">Migliori Team</string>
 
 </resources>

@@ -1,11 +1,11 @@
 package it.unitn.lpsmt2020.portalesimulatoregare.event;
 
-import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItemLight;
 
 public class SubscriptionChangedEvent {
-    public final ChampionshipItem item;
+    public final ChampionshipItemLight item;
 
-    public SubscriptionChangedEvent(ChampionshipItem item) {
+    public SubscriptionChangedEvent(ChampionshipItemLight item) {
         this.item = item;
 
     }

@@ -1,30 +1,25 @@
-package it.unitn.lpsmt2020.portalesimulatoregare.ui;
+package it.unitn.lpsmt2020.portalesimulatoregare.ui.main;
 
-import androidx.appcompat.widget.ActivityChooserView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import it.unitn.lpsmt2020.portalesimulatoregare.ChampionshipDetailActivity;
 import it.unitn.lpsmt2020.portalesimulatoregare.R;
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.InternalDB;
 import it.unitn.lpsmt2020.portalesimulatoregare.event.SubscriptionChangedEvent;
-import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
-import it.unitn.lpsmt2020.portalesimulatoregare.ui.dummy.DummyContent.DummyItem;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItemLight;
 
-import java.net.Inet4Address;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
@@ -32,10 +27,10 @@ import java.util.stream.Collector;
  */
 public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<ChampionshipListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ChampionshipItem> mValues;
+    private final List<ChampionshipItemLight> mValues;
     private final boolean onlySubbed;
 
-    public ChampionshipListRecyclerViewAdapter(List<ChampionshipItem> items, boolean onlySubbed) {
+    public ChampionshipListRecyclerViewAdapter(List<ChampionshipItemLight> items, boolean onlySubbed) {
         mValues = items;
         this.onlySubbed = onlySubbed;
     }
@@ -57,7 +52,7 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
         notifyItemRangeChanged(i, mValues.size());
     }
 
-    public void addItem(ChampionshipItem item) {
+    public void addItem(ChampionshipItemLight item) {
         this.mValues.add(item);
         notifyItemInserted(this.mValues.size() - 1);
         notifyItemRangeChanged(this.mValues.size() - 1, mValues.size());
@@ -72,7 +67,7 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
         public final View view;
         public final TextView txtChampionshipTitle;
         public final ImageView imgSubIndicator;
-        public ChampionshipItem item;
+        public ChampionshipItemLight item;
 
         public ViewHolder(View view) {
             super(view);
@@ -80,9 +75,10 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
             this.txtChampionshipTitle = (TextView) view.findViewById(R.id.txtChampionshipTitle);
             this.imgSubIndicator = (ImageView) view.findViewById(R.id.imgSubIndicator);
             this.imgSubIndicator.setOnClickListener((View v) -> onSubClick());
+            this.view.setOnClickListener((View v) -> onChampionshipClick());
         }
 
-        public void setItem(ChampionshipItem item) {
+        public void setItem(ChampionshipItemLight item) {
             this.item = item;
             this.txtChampionshipTitle.setText(item.getName());
             setSubIcon();
@@ -93,7 +89,7 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
             this.imgSubIndicator.setImageDrawable(d);
         }
 
-        public void onSubClick() {
+        private void onSubClick() {
             boolean nextStatus = !this.item.isSubscribed();
 
 
@@ -109,6 +105,12 @@ public class ChampionshipListRecyclerViewAdapter extends RecyclerView.Adapter<Ch
             EventBus bus = EventBus.getDefault();
             bus.post(new SubscriptionChangedEvent(this.item));
         }
+
+        private void onChampionshipClick() {
+            Intent openChampionship = new Intent(this.view.getContext(), ChampionshipDetailActivity.class);
+            this.view.getContext().startActivity(openChampionship);
+        }
+
 
         public void checkSubStatus() {
             boolean s = InternalDB.isSubscribed(this.item.getId());

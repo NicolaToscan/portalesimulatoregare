@@ -1,9 +1,7 @@
 package it.unitn.lpsmt2020.portalesimulatoregare.datasource;
 
-import android.app.DownloadManager;
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
@@ -18,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItemLight;
 
 public class DataSource {
     private static final String apiEndpoint = "http://nicolatoscan.altervista.org/api/";
@@ -36,7 +34,7 @@ public class DataSource {
 
 
 
-    public static void getSubscribedChampionship(final MutableLiveData<List<ChampionshipItem>> championshipList) {
+    public static void getSubscribedChampionship(final MutableLiveData<List<ChampionshipItemLight>> championshipList) {
         String url = apiEndpoint + "championship/current.json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -44,18 +42,18 @@ public class DataSource {
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray champArray = response.getJSONArray("campionati");
-                            ArrayList<ChampionshipItem> res = new ArrayList<ChampionshipItem>();
+                            ArrayList<ChampionshipItemLight> res = new ArrayList<ChampionshipItemLight>();
 
                             for (int i = 0; i < champArray.length(); i++) {
                                 JSONObject champJSON = champArray.getJSONObject(i);
                                 int id = Integer.parseInt(champJSON.getString("id"));
                                 String name = champJSON.getString("nome");
-                                res.add(new ChampionshipItem(id, name, InternalDB.isSubscribed(id)));
+                                res.add(new ChampionshipItemLight(id, name, InternalDB.isSubscribed(id)));
                             }
                             championshipList.postValue(res);
 
                         } catch (Exception e) {
-                            championshipList.postValue(new ArrayList<ChampionshipItem>());
+                            championshipList.postValue(new ArrayList<ChampionshipItemLight>());
                             //TODO: qualcosina qui
                         }
 
@@ -63,7 +61,7 @@ public class DataSource {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        championshipList.postValue(new ArrayList<ChampionshipItem>());
+                        championshipList.postValue(new ArrayList<ChampionshipItemLight>());
                         //TODO: qualcosina qui
                     }
                 });

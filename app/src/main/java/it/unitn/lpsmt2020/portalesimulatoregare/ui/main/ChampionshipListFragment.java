@@ -1,4 +1,4 @@
-package it.unitn.lpsmt2020.portalesimulatoregare.ui;
+package it.unitn.lpsmt2020.portalesimulatoregare.ui.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,24 +18,20 @@ import android.widget.ProgressBar;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import it.unitn.lpsmt2020.portalesimulatoregare.R;
 import it.unitn.lpsmt2020.portalesimulatoregare.datasource.DataSource;
-import it.unitn.lpsmt2020.portalesimulatoregare.datasource.InternalDB;
 import it.unitn.lpsmt2020.portalesimulatoregare.event.SubscriptionChangedEvent;
-import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItem;
-import it.unitn.lpsmt2020.portalesimulatoregare.ui.dummy.DummyContent;
+import it.unitn.lpsmt2020.portalesimulatoregare.models.ChampionshipItemLight;
 
 /**
  * A fragment representing a list of Items.
  */
 public class ChampionshipListFragment extends Fragment {
 
-    private final MutableLiveData<List<ChampionshipItem>> championshipList = new MutableLiveData<List<ChampionshipItem>>();
+    private final MutableLiveData<List<ChampionshipItemLight>> championshipList = new MutableLiveData<List<ChampionshipItemLight>>();
 
     // TODO: Customize parameter argument names
     private static final String ARG_ONLY_SUBBED = "only-subbed";
@@ -80,9 +75,9 @@ public class ChampionshipListFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.list);;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        championshipList.observe(getViewLifecycleOwner(), new Observer<List<ChampionshipItem>>() {
+        championshipList.observe(getViewLifecycleOwner(), new Observer<List<ChampionshipItemLight>>() {
             @Override
-            public void onChanged(@Nullable List<ChampionshipItem> chamList) {
+            public void onChanged(@Nullable List<ChampionshipItemLight> chamList) {
 
                 if (onlySubbed)
                     chamList = chamList.stream().filter(c -> c.isSubscribed()).collect(Collectors.toList());

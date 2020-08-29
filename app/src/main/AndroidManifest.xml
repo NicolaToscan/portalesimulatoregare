@@ -13,10 +13,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ChampionshipDetailActivity"
+            android:label="@string/title_activity_championship_detail"
+            android:parentActivityName=".MainActivity" ></activity>
+        <activity
             android:name=".ProfileSettingsActivity"
             android:label="@string/settings_title"
-            android:parentActivityName=".MainActivity"
-            ></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
